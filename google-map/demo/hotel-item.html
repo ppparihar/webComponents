@@ -1,0 +1,23 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+ 
+<dom-module id="hotel-item">
+  <template>
+    <h2 on-tap="handleTap">{{item.name}}</h1>
+  </template>
+  <script>
+    Polymer({
+      is: 'hotel-item',
+      properties: {      
+       item: {
+            type: Object,
+            value: null,
+            notify: true
+          }       
+        },
+      handleTap: function() {
+        this.fire('hotel-click',this.item);
+        //console.log(this.item);
+      }
+    });
+  </script>
+</dom-module>

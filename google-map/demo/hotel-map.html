@@ -3,15 +3,15 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <title>Google Map demo</title>
-  <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <title>Google Map demo</title>  
+<link rel="import" href="../bower_components/polymer/polymer.html">
   <link rel="import" href="../google-map.html">
   <link rel="import" href="../google-map-marker.html">
   <link rel="import" href="../google-map-poly.html">
   <link rel="import" href="../google-map-directions.html">
 
   <link rel="import" href="hotel-item.html">
-  <style>
+<style>
     body {
       margin: 0;
       height: 100vh;
@@ -22,12 +22,15 @@
       bottom: 10%;
     }
   </style>
+  
+  
 </head>
 <body class="fullbleed">
+  <dom-module id="hotel-map">
 
-<template is="dom-bind">
+<template >  
    <google-map latitude="36.12904" longitude="-115.173668" min-zoom="11" max-zoom="15"
-              language="en" api-key="[[apiKey]]" hotel-click="_onHotelClick">
+              language="en" api-key="[[apiKey]]">
 
                  <template is="dom-repeat" items="{{Markers}}" as="marker">
                         <google-map-marker
@@ -44,26 +47,34 @@
                          language="en" api-key="[[apiKey]]"></google-map-directions> -->
 </template>
 
-<button id="controlsToggle" onclick="toggleControls()">Toggle controls</button>
 
 <script>
-var t = document.querySelector('template');
-
-  t.apiKey = 'AIzaSyB6k-oW6Pc7pevOOZywfU4Ak-qhN---IAI'; // TODO: update to your own API Key!
-
- t.Markers= [
+    Polymer({
+      is: 'hotel-map',
+      properties: {      
+       Markers: {
+            type: Array,
+            value: [
               {latitude:'36.12904',longitude:'-115.173668',category:'Hotel',name:'Hotel 1'},
               {latitude:'36.10944',longitude:'-115.177864',category:'Hotel',name:'Hotel 2'},
               {latitude:'36.09215',longitude:'-115.173004',category:'Hotel',name:'Hotel 3'}
-            ];
- t._getIcon = function(type){return "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/San_Francisco_Giants_Cap_Insignia.svg/200px-San_Francisco_Giants_Cap_Insignia.svg.png"; };    
+            ],
+            notify: true
+          },
+          apiKey:{
+            type:String,
+            value:'AIzaSyB6k-oW6Pc7pevOOZywfU4Ak-qhN---IAI',
+            notify: true
+          }       
+        },     
+      listeners:{
+                    'hotel-click': '_onHotelClick'                    
+                },
+      _onHotelClick :function(e){ console.log("hotel-click handled",e.detail); }
+    });
+  </script>
+</dom-module>
 
-
-   // document.querySelector('google-map').addEventListener('hotel-click', function (e) {
-   //      console.log("hotel-click handled",e.detail); 
-   //  })
-   t._onHotelClick = function(e){ console.log("hotel-click handled",e.detail); };
-         
-</script>
+<hotel-map></hotel-map>
 </body>
 </html>
