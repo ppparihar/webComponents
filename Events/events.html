@@ -1,0 +1,137 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+ 
+<dom-module id="x-button">
+  <template>
+    <button on-tap="handleTap">Kick Me</button>
+  </template>
+  <script>
+    Polymer({
+      is: 'x-button',
+      handleTap: function() {
+        alert('Ow!');
+      }
+    });
+  </script>
+</dom-module>
+
+<x-button></x-button>
+<!-- // simple events -->
+
+<!--custom events -->
+<dom-module id="x-buttonWithCustomEvent">
+  <template>
+    <button on-click="handleClick">Kick Me</button>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'x-buttonWithCustomEvent',
+      handleClick: function(e, detail) {
+        this.fire('kick', {kicked: true});
+      }
+    });
+
+  </script>
+
+</dom-module>
+<x-buttonWithCustomEvent></x-buttonWithCustomEvent>
+
+<script>
+    document.querySelector('x-buttonWithCustomEvent').addEventListener('kick', function (e) {
+        console.log(e.detail.kicked); // true
+    })
+</script>
+
+<!-- // custome events -->
+
+<!-- event with listner -->
+
+<dom-module id="drag-me">
+  <template>
+    <style>
+      #dragme {
+        width: 200px;
+        height: 100px;
+        background: gray;
+        color: #fff;
+      }
+    </style>
+
+    <div id="dragme">{{message}}</div>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'drag-me',
+
+      listeners: {
+        'dragme.track': 'handleTrack'
+      },
+
+      handleTrack: function(e) {
+        switch(e.detail.state) {
+          case 'start':
+            this.message = 'Tracking started!';
+            break;
+          case 'track':
+            this.message = 'Tracking in progress... ' +
+              e.detail.x + ', ' + e.detail.y;
+            break;
+          case 'end':
+            this.message = 'Tracking ended!';
+            break;
+        }
+      }
+    });
+  </script>
+</dom-module>
+<br/><br/>
+<drag-me></drag-me>
+
+
+<!-- event-retargeting -->
+ ...
+<dom-module id="event-retargeting">
+  <template>
+    <button id="myButton">Click Me</button>    
+  </template>
+
+  <script>
+    Polymer({
+
+        is: 'event-retargeting',
+
+        listeners: {
+          'click': 'handleClick',
+        },
+
+        handleClick: function(e) {
+          console.info(e.target.id + ' was clicked.');
+        }
+      });
+  </script>
+</dom-module>
+
+<br/>
+
+<event-retargeting></event-retargeting>
+
+<script>
+  var el = document.querySelector('event-retargeting');
+  el.addEventListener('click', function(e){
+  	console.log(e);
+  	console.log(event);
+  	console.log(arguments);
+    var normalizedEvent = Polymer.dom(event);
+    // logs #myButton
+    console.info('rootTarget is:', normalizedEvent.rootTarget);
+    // logs the instance of event-targeting that hosts #myButton
+    console.info('localTarget is:', normalizedEvent.localTarget);
+    // logs [#myButton, document-fragment, event-retargeting,
+    //       body, html, document, Window]
+    console.info('path is:', normalizedEvent.path);
+  });
+</script>
+
+<!-- // event-retargeting -->
